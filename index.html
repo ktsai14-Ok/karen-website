@@ -1,0 +1,1469 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>K A R E N | 頂級生命靈數與植物香氣美學</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Premium Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Noto+Serif+TC:wght@200;300;400;600&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- React & Babel -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        luxury: {
+                            obsidian: '#070d0a', // 極致深邃黑綠
+                            forest: '#0f1814',   // 苔蘚高級暗綠
+                            gold: '#d4b26f',     // 皇家香檳金
+                            goldlight: '#f5ebd7',// 淺雅金
+                            cream: '#fbf9f5',    // 絲滑乳白
+                            charcoal: '#171717', // 高級炭黑
+                            sage: '#8fa89b',     // 鼠尾草灰綠
+                            clay: '#a38f7a'      // 溫潤陶土色
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', '"Noto Serif TC"', 'serif'],
+                        sans: ['"Noto Sans TC"', 'sans-serif'],
+                        handwriting: ['"ChenYuLuoYan"', 'cursive']
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* 載入「辰宇落雁體 (ChenYuLuoYan)」優雅手寫字 */
+        @font-face {
+            font-family: 'ChenYuLuoYan';
+            src: url('https://cdn.jsdelivr.gh/gh/scaloftw/chenyuluoyan-font@main/ChenYuLuoYan-Regular.woff2') format('woff2');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        .text-handwritten {
+            font-family: 'ChenYuLuoYan', 'Cormorant Garamond', serif !important;
+            letter-spacing: 0.05em;
+        }
+        
+        .text-editorial {
+            font-family: 'Cormorant Garamond', 'Noto Serif TC', serif;
+            letter-spacing: 0.15em;
+            line-height: 1.6;
+        }
+        
+        .tracking-luxury {
+            letter-spacing: 0.25em;
+        }
+
+        /* 溫柔緩慢的星光呼吸光暈 */
+        @keyframes luxury-glow {
+            0%, 100% { transform: scale(1); opacity: 0.06; filter: blur(60px); }
+            50% { transform: scale(1.12); opacity: 0.15; filter: blur(80px); }
+        }
+        .luxury-breathing-glow {
+            animation: luxury-glow 12s ease-in-out infinite;
+        }
+
+        /* 蠟燭火焰搖曳效果 */
+        @keyframes flame-sway {
+            0%, 100% { transform: scale(1) rotate(-0.8deg); filter: drop-shadow(0 0 5px rgba(212, 178, 111, 0.7)); }
+            50% { transform: scale(1.06) rotate(0.8deg); filter: drop-shadow(0 0 11px rgba(212, 178, 111, 0.95)); }
+        }
+        .luxury-candle-flame {
+            animation: flame-sway 2.5s infinite ease-in-out;
+            transform-origin: bottom center;
+        }
+
+        /* 精緻精品滾動條 */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #070d0a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(212, 178, 111, 0.2);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(212, 178, 111, 0.5);
+        }
+
+        /* 高級時裝雜誌排版 */
+        .body-editorial-lg {
+            font-size: 20px !important;
+            line-height: 2.0 !important;
+            letter-spacing: 0.06em !important;
+            font-weight: 300 !important;
+        }
+    </style>
+</head>
+<body class="bg-luxury-obsidian text-luxury-cream font-sans antialiased overflow-x-hidden selection:bg-luxury-gold selection:text-luxury-obsidian">
+
+    <!-- React Container -->
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef } = React;
+
+        function App() {
+            // 系統載入狀態 (Loader 2100ms)
+            const [isLoading, setIsLoading] = useState(true);
+            const [loadingPercentage, setLoadingPercentage] = useState(0);
+
+            // 靈魂打字機狀態
+            const [typedText, setTypedText] = useState("");
+            const sloganText = "100%擁抱靈魂的不完美，有我陪著你。";
+
+            // 生命數字計算器
+            const [birthDate, setBirthDate] = useState({ year: "1995", month: "06", day: "21" });
+            const [calculatedNum, setCalculatedNum] = useState(null);
+            const [numProfile, setNumProfile] = useState(null);
+
+            // 能量校準計劃：當前選中天數
+            const [selectedDay, setSelectedDay] = useState(1);
+            
+            // 打卡手冊數據
+            const [checkedDays, setCheckedDays] = useState({
+                1: true,
+                2: false,
+                3: false,
+                4: false,
+                5: false,
+                6: false,
+                7: false
+            });
+            const [diaryEntries, setDiaryEntries] = useState({
+                1: {
+                    meditationNote: "初次吸嗅杜松子，感受到一股清涼的松針氣息。大腦原本嗡嗡作響的內耗雜音慢慢平息了，整個人彷彿置身於晨霧繚繞的北歐針葉林，有一種前所未有的清明感。",
+                    releaseNote: "放下一味追求完美、抗拒犯錯的緊繃控制欲。接受不夠完美的自己也是獨一無二的旅程。"
+                }
+            });
+
+            // 打卡手冊 Modal 狀態
+            const [isDiaryOpen, setIsDiaryOpen] = useState(false);
+            const [tempMeditation, setTempMeditation] = useState("");
+            const [tempRelease, setTempRelease] = useState("");
+            const [affirmationChecked, setAffirmationChecked] = useState(false);
+
+            // 課程選擇
+            const [selectedCourseId, setSelectedCourseId] = useState(1);
+
+            // 互動狀態
+            const [activeToast, setActiveToast] = useState(null);
+            const [isNotifyModalOpen, setIsNotifyModalOpen] = useState(false);
+            const [notifyTarget, setNotifyTarget] = useState("");
+            const [emailInput, setEmailInput] = useState("");
+
+            // 音訊狀態
+            const [isPlayingAudio, setIsPlayingAudio] = useState(false);
+            const audioCtxRef = useRef(null);
+
+            // Loader 動態計時 (2100ms)
+            useEffect(() => {
+                const stepTime = 2100 / 20;
+                const interval = setInterval(() => {
+                    setLoadingPercentage(prev => {
+                        if (prev >= 100) {
+                            clearInterval(interval);
+                            return 100;
+                        }
+                        return prev + 5;
+                    });
+                }, stepTime);
+
+                const timeout = setTimeout(() => {
+                    setIsLoading(false);
+                }, 2100);
+
+                return () => {
+                    clearInterval(interval);
+                    clearTimeout(timeout);
+                };
+            }, []);
+
+            // 打字機計時 (95ms 一字)
+            useEffect(() => {
+                if (isLoading) return;
+                let currentIndex = 0;
+                setTypedText("");
+
+                const typeInterval = setInterval(() => {
+                    setTypedText(prev => prev + sloganText.charAt(currentIndex));
+                    currentIndex++;
+                    if (currentIndex >= sloganText.length) {
+                        clearInterval(typeInterval);
+                    }
+                }, 95);
+
+                return () => clearInterval(typeInterval);
+            }, [isLoading]);
+
+            // 能量校準數據
+            const dailyProgram = {
+                1: {
+                    date: "能量校準 | 第一天",
+                    title: "Day 1 | 杜松子 Juniper Berry",
+                    theme: "淨化 Purify",
+                    scent: "杜松子 Juniper Berry 單方吸嗅 / 擴香",
+                    affirmation: "我用喜樂驅散負面能量",
+                    description: "杜松子的香氣具有強大的淨化能力，能夠幫助我們清除思想中的負面能量，讓內心保持清明和喜悅。",
+                    practice: "將杜松子精油滴於掌心，溫柔搓熱後合掌吸嗅。每一次緩慢的深長吐氣，都想像腦袋中糾結的內耗思緒正化作林間的微霧消散而去。",
+                    localImage: "./images/day1_juniper.jpg"
+                },
+                2: {
+                    date: "能量校準 | 第二天",
+                    title: "Day 2 | 絲柏 Cypress",
+                    theme: "轉變 Transition",
+                    scent: "絲柏 Cypress 單方吸嗅 / 稀釋揉撫肩頸",
+                    affirmation: "我迎接前進的衝勁與挑戰",
+                    description: "絲柏的木質香氣帶來內在的力量與堅韌，幫助我們在變革的過程中保持穩定，勇敢迎接生命中的轉變。",
+                    practice: "感受絲柏高聳挺拔、直入雲霄的生命姿態。吸氣時，汲取這份不畏風雨的堅韌衝勁；吐氣時，釋放對未知前路的過度掌控與抗拒。",
+                    localImage: "./images/day2_cypress.jpg"
+                },
+                3: {
+                    date: "能量校準 | 第三天",
+                    title: "Day 3 | 雪松 Cedarwood",
+                    theme: "勇氣 Courage",
+                    scent: "喜馬拉雅雪松 Cedarwood 單方吸嗅 / 擴香",
+                    affirmation: "一切皆在我的掌握之中",
+                    description: "雪松提供穩定與堅毅的能量，鼓勵我們面對未知時能保持冷靜和勇氣。",
+                    practice: "深深吸入雪松古老而巍峨的木質芬芳。想像每一次吸氣，大地厚實的支持都流入妳的脊椎與雙腳；每一次呼氣，都放下對未知的抗拒與不安，重獲內心的平穩與掌握感。",
+                    localImage: "./images/day3_cedarwood.jpg"
+                },
+                4: {
+                    date: "能量校準 | 第四天",
+                    title: "Day 4 | 佛手柑 Bergamot",
+                    theme: "校準 Align",
+                    scent: "佛手柑 3滴 + 雪松 1滴 (金黃光圈防禦)",
+                    affirmation: "我在優雅的香氣邊界中安然自在",
+                    description: "佛手柑溫暖明亮的陽光芬芳，搭配雪松高聳挺拔的木質氣息，能為敏感的妳建立優雅且堅定不移的能量防護網。",
+                    practice: "想像一道璀璨香檳金光圈環繞全身，外界的所有雜亂噪音在觸碰光芒時都自動化為塵埃。",
+                    localImage: ""
+                },
+                5: {
+                    date: "能量校準 | 第五天",
+                    title: "Day 5 | 天竺葵 Geranium",
+                    theme: "自愛 Self-Love",
+                    scent: "天竺葵 2滴 + 葡萄柚 2滴 (荷爾蒙與愛平衡)",
+                    affirmation: "不完美的我，依然值得被100%疼惜",
+                    description: "天竺葵帶有玫瑰甜美與草本幽香的氣味，能極佳地雙向平衡失調、緊繃的內在女性能量，滋潤疲累的身心。",
+                    practice: "看著鏡中精緻的雙眼，深呼吸，將香氣敷在雙頰上，對自己溫柔微笑並給予最高等級的肯定。",
+                    localImage: ""
+                },
+                6: {
+                    date: "能量校準 | 第六天",
+                    title: "Day 6 | 檀香 Sandalwood",
+                    theme: "定錨 Grounding",
+                    scent: "檀香 1滴 + 歐洲冷杉 2滴 (神識定錨)",
+                    affirmation: "我深植大地，擁有無比的沉靜力量",
+                    description: "在能量校準突破前，我們做最深沉的釋放。絲柏與冷杉能沖洗靈魂的塵土，檀香能徹底平息過度思考的腦部噪音。",
+                    practice: "專注於脊椎尾端。想像妳的能量化作古老森林的樹根深深紮入地心，接收來自地母溫慢、厚實的承接與滋養。",
+                    localImage: ""
+                },
+                7: {
+                    date: "能量校準 | 第七天",
+                    title: "Day 7 | 玫瑰 & 沒藥 Rose & Myrrh",
+                    theme: "大圓滿 Culmination",
+                    scent: "大馬士革玫瑰 1滴 + 沒藥 2滴 (神聖蛻變儀式)",
+                    affirmation: "我臣服並喜悅地迎向更高版本的自己",
+                    description: "今天是第一階段的終點，舊的內耗能量已然清理完畢。我們準備在今晚進行第一階段回顧小結會！",
+                    practice: "今晚在桌前點燃精緻的微光蠟燭，深呼吸玫瑰與沒藥，讓高頻神聖能量流入心輪，完成神聖蛻變對齊。",
+                    localImage: ""
+                }
+            };
+
+            const toggleNatureSound = () => {
+                if (isPlayingAudio) {
+                    if (audioCtxRef.current) {
+                        audioCtxRef.current.close();
+                        audioCtxRef.current = null;
+                    }
+                    setIsPlayingAudio(false);
+                    showToast("🕯️ 靜謐音流已關閉。回到耳根清淨...");
+                } else {
+                    try {
+                        const AudioContext = window.AudioContext || window.webkitAudioContext;
+                        const ctx = new AudioContext();
+                        audioCtxRef.current = ctx;
+
+                        // 模擬深海低頻海浪
+                        const bufferSize = 3 * ctx.sampleRate;
+                        const noiseBuffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+                        const output = noiseBuffer.getChannelData(0);
+                        for (let i = 0; i < bufferSize; i++) {
+                            output[i] = Math.random() * 2 - 1;
+                        }
+
+                        const noiseNode = ctx.createBufferSource();
+                        noiseNode.buffer = noiseBuffer;
+                        noiseNode.loop = true;
+
+                        const lowpass = ctx.createBiquadFilter();
+                        lowpass.type = 'lowpass';
+                        lowpass.frequency.setValueAtTime(200, ctx.currentTime);
+
+                        const noiseGain = ctx.createGain();
+                        noiseGain.gain.setValueAtTime(0.006, ctx.currentTime);
+
+                        noiseNode.connect(lowpass);
+                        lowpass.connect(noiseGain);
+                        noiseGain.connect(ctx.destination);
+                        noiseNode.start();
+
+                        const oceanBreath = () => {
+                            if (!audioCtxRef.current) return;
+                            const now = ctx.currentTime;
+                            noiseGain.gain.linearRampToValueAtTime(0.035, now + 4);
+                            lowpass.frequency.linearRampToValueAtTime(320, now + 4);
+                            noiseGain.gain.linearRampToValueAtTime(0.006, now + 9);
+                            lowpass.frequency.linearRampToValueAtTime(140, now + 9);
+                        };
+                        oceanBreath();
+                        const oceanInterval = setInterval(() => {
+                            if (audioCtxRef.current) oceanBreath();
+                            else clearInterval(oceanInterval);
+                        }, 10000);
+
+                        // 432Hz 頌缽頻率
+                        const osc1 = ctx.createOscillator();
+                        const osc2 = ctx.createOscillator();
+                        const bowlGain = ctx.createGain();
+
+                        osc1.type = 'sine';
+                        osc1.frequency.setValueAtTime(108, ctx.currentTime);
+                        osc2.type = 'triangle';
+                        osc2.frequency.setValueAtTime(162, ctx.currentTime);
+
+                        bowlGain.gain.setValueAtTime(0.012, ctx.currentTime);
+
+                        osc1.connect(bowlGain);
+                        osc2.connect(bowlGain);
+                        bowlGain.connect(ctx.destination);
+
+                        osc1.start();
+                        osc2.start();
+
+                        setIsPlayingAudio(true);
+                        showToast("🌿 頂級私享 432Hz 音療已開啟，請在靜謐中校準能量...");
+                    } catch (e) {
+                        console.error("Audio Context 啟動失敗: ", e);
+                        showToast("您的瀏覽器限制音訊播放，請確認靜音按鍵已解除。");
+                    }
+                }
+            };
+
+            const showToast = (msg) => {
+                setActiveToast(msg);
+                setTimeout(() => {
+                    setActiveToast(null);
+                }, 4000);
+            };
+
+            const triggerNotifyModal = (targetTitle) => {
+                setNotifyTarget(targetTitle);
+                setIsNotifyModalOpen(true);
+            };
+
+            const handleSubscribe = (e) => {
+                e.preventDefault();
+                setIsNotifyModalOpen(false);
+                showToast(`✨ 預約成功！Karen 將在 ${notifyTarget} 課程解鎖時第一時間為妳寄送專屬信件 💌`);
+                setEmailInput("");
+            };
+
+            const openDiaryForm = (dayNum) => {
+                setSelectedDay(dayNum);
+                const existing = diaryEntries[dayNum] || { meditationNote: "", releaseNote: "" };
+                setTempMeditation(existing.meditationNote);
+                setTempRelease(existing.releaseNote);
+                setAffirmationChecked(checkedDays[dayNum]);
+                setIsDiaryOpen(true);
+            };
+
+            const saveDiaryAndCheckIn = (e) => {
+                e.preventDefault();
+                if (!affirmationChecked) {
+                    showToast("🔮 請先在心裡複誦並勾選確認今日的『正能量肯定句』哦！");
+                    return;
+                }
+
+                setDiaryEntries(prev => ({
+                    ...prev,
+                    [selectedDay]: {
+                        meditationNote: tempMeditation,
+                        releaseNote: tempRelease
+                    }
+                }));
+
+                setCheckedDays(prev => ({
+                    ...prev,
+                    [selectedDay]: true
+                }));
+
+                setIsDiaryOpen(false);
+                showToast(`🕯️ Day ${selectedDay} 打卡成功！已為妳的靈魂手帳蓋上香氣印章，並點亮了冥想蠟燭 ✨`);
+            };
+
+            // 生命靈數資料庫
+            const numerologyData = {
+                1: {
+                    title: "生命靈數 1 | 獨立開創的靈魂先驅",
+                    char: "妳天生具備卓越的遠見與開創力，習慣獨立前行。然而在追求極致的過程中，極易產生精神緊繃與高度的內耗，難以安放內心的脆弱。",
+                    scent: "葡萄柚 (Grapefruit) + 迷迭香 (Rosemary) + 尤加利 (Eucalyptus)",
+                    practice: "將香氣滴於掌心吸嗅。葡萄柚的輕盈澄澈能消解嚴肅，迷迭香則能喚醒疲憊的神經，幫助妳以優雅、寬容的姿態重獲方向。"
+                },
+                2: {
+                    title: "生命靈數 2 | 溫柔細緻的能量守護者",
+                    char: "妳天生共情力極高，對身邊的人與環境有著近乎微米級的細膩感知。但也正因如此，妳極易過度吸收旁人的情緒雜訊，導致內在能量乾涸與沉重。",
+                    scent: "真薰衣草 (Lavender) + 苦橙葉 (Petitgrain) + 乳香 (Frankincense)",
+                    practice: "緩緩閉上雙眼吸氣。真薰衣草將安撫發熱的大腦，苦橙葉則如厚實土壤，為妳在敏感的外界之間建立安全且優雅的能量屏障。"
+                },
+                3: {
+                    title: "生命靈數 3 | 靈動優雅的藝術創造者",
+                    char: "妳富於感性、擁有極高美感與靈感。但也伴隨著情緒起伏劇烈的盲區，當思緒過度繁雜或日常失去焦點時，極易陷入無來由的空虛與內在迷惘。",
+                    scent: "甜橙 (Sweet Orange) + 乳香 (Frankincense) + 佛手柑 (Bergamot)",
+                    practice: "甜橙為妳注入純粹的日光能量。配合乳香將天馬行空的思緒下沉與定錨，讓靈感化為具體且富足的生活實踐。"
+                },
+                4: {
+                    title: "生命靈數 4 | 穩健尊貴的秩序實踐家",
+                    char: "妳渴望安定，做事極有條理，追求極致的安全。然而一旦既定生活秩序、計畫發生脫軌，妳便容易陷入深度控制焦慮，難以放空身心。",
+                    scent: "岩蘭草 (Vetiver) + 雪松 (Cedarwood) + 歐洲冷杉 (Silver Fir)",
+                    practice: "岩蘭草具有奢華的「深層地表紮根 (Grounding)」力量。閉上眼，感受冷杉與雪松高大巍峨的松針香氣，引導大腦解鎖緊繃。"
+                },
+                5: {
+                    title: "生命靈數 5 | 自由尊貴的靈魂旅人",
+                    char: "妳熱愛自由、抗拒任何平庸與常規限制。當生活落入重複的庸常，或是責任超載時，妳極易產生無名的煩躁不安，出現呼吸急促、身心窒悶感。",
+                    scent: "胡椒薄荷 (Peppermint) + 佛手柑 (Bergamot) + 廣藿香 (Patchouli)",
+                    practice: "薄荷能一瞬間撕裂卡關沉悶的局勢，佛手柑則能疏解因追尋突破而帶來的暗中焦慮，讓妳在香氣中，重獲優雅前行的寬廣自由。"
+                },
+                6: {
+                    title: "生命靈數 6 | 慈悲高貴的極致奉獻者",
+                    char: "妳富於關懷大愛，本能地照顧身邊的所有人。但常常因為大包大攬、把別人的課題當成自己的責任，而在夜深人靜時感到孤獨、能量被完全掏空。",
+                    scent: "大馬士革玫瑰 (Rose) + 天竺葵 (Geranium) + 檀香 (Sandalwood)",
+                    practice: "玫瑰象徵著無條件的自愛與滋養。在檀香的平靜烘托下，請對自己說：『在溫暖他人之前，我允許自己先被愛與奢華滋潤。』"
+                },
+                7: {
+                    title: "生命靈數 7 | 追尋真相的沉靜思考家",
+                    char: "妳聰慧且熱愛深究本質。但當妳的大腦過度運轉 (Overthinking) 時，神經會極度緊繃，進而導致嚴重的失眠、夢境紊亂與精神耗竭。",
+                    scent: "檀香 (Sandalwood) + 歐洲冷杉 (Silver Fir) + 乳香 (Frankincense)",
+                    practice: "檀香擁有沉澱散亂神識的強大力量。配合深長呼吸，終結腦中一切紛擾的嗡嗡雜音，如同置身清晨煙霧繚繞的北歐修道院。"
+                },
+                8: {
+                    title: "生命靈數 8 | 豐盛大氣的宇宙掌舵者",
+                    char: "妳具備非凡的實踐力與大格局。然而，對自我的完美要求與永不認輸的鋼鐵意志，常常讓妳在超載運轉下默默承受生理與心理的崩潰邊緣。",
+                    scent: "廣藿香 (Patchouli) + 茉莉 (Jasmine) + 甜橙 (Sweet Orange)",
+                    practice: "廣藿香的土質芬芳能安撫妳龐大的壓力，茉莉奢華的花香則能軟化妳的防禦，讓妳在放鬆中，體驗真正優雅、源源不絕的富足。"
+                },
+                9: {
+                    title: "生命靈數 9 | 理想高遠的靈性實踐家",
+                    char: "妳心懷大愛、樂於助人，追尋生命更高的價值。然而當崇高的理想與現實產生巨大落差時，妳容易感到幻滅、虛無與飄忽，失去前行落地的重心。",
+                    scent: "沒藥 (Myrrh) + 絲柏 (Cypress) + 葡萄柚 (Grapefruit)",
+                    practice: "沒藥能修補微小的氣場裂縫，絲柏則如巍峨的指引者。深長嗅吸，這股香氣能將妳的夢想踏實落地，獲得平靜自信。"
+                }
+            };
+
+            const calculateNumerology = (e) => {
+                e.preventDefault();
+                const numStr = birthDate.year + birthDate.month + birthDate.day;
+                let sum = 0;
+                for (let i = 0; i < numStr.length; i++) {
+                    const char = numStr.charAt(i);
+                    if (!isNaN(char)) sum += parseInt(char);
+                }
+
+                while (sum > 9) {
+                    let tempSum = 0;
+                    const sumStr = sum.toString();
+                    for (let i = 0; i < sumStr.length; i++) {
+                        tempSum += parseInt(sumStr.charAt(i));
+                    }
+                    sum = tempSum;
+                }
+
+                setCalculatedNum(sum);
+                setNumProfile(numerologyData[sum]);
+                showToast(`🔮 靈魂密碼已鎖定：妳是第 ${sum} 號靈魂宿主`);
+            };
+
+            // 課程資料 (全數鎖定)
+            const coursesData = {
+                1: {
+                    id: "01",
+                    status: "locked",
+                    title: "告別失眠與高壓 | 植物人格與微醺調香",
+                    subtitle: "建立專屬『睡眠噴霧』，找回一秒入睡的尊貴安心儀式。",
+                    desc: "本課堂深入探討植物大腦化學。引導妳認識自己的情緒植物人格，並利用乳香、大馬士革玫瑰、佛手柑與岩蘭草，調製出不依賴藥物、安撫深度焦慮、使大腦緩緩進入 Delta 慢波的微醺香調。",
+                    scentProfile: "真薰衣草 3d + 苦橙葉 2d + 檀香 1d"
+                },
+                2: {
+                    id: "02",
+                    status: "locked",
+                    title: "斬斷換季焦慮 | 免疫提升與呼吸道防護",
+                    subtitle: "小孩感冒、家人過敏？學會用尤加利與植物化學築起抗菌護盾。",
+                    desc: "當換季病毒肆虐，大腦很容易陷入未知的免疫焦慮。本課堂將解析尤加利、茶樹等單萜醇與氧化物類精油的化學結構，教妳如何在家中擴香起一道天然防護網，保護家人的呼吸道安全。",
+                    scentProfile: "藍膠尤加利 3d + 羅文莎葉 2d + 檸檬 1d"
+                },
+                3: {
+                    id: "03",
+                    status: "locked",
+                    title: "省下萬元保養費 | 逆齡肌膚精油調配",
+                    subtitle: "拒絕化學添加。針對自身膚況，精準調配純淨勝肽精華與卸妝油。",
+                    desc: "保養不需要繁瑣而昂貴的化學步驟。本章節教導如何依據妳特定的油水平衡度，精選荷荷巴油、玫瑰果油，並調配大馬士革玫瑰與沒藥，做出勝過奢華大牌的抗氧化精華底油，找回細胞原生的修復力。",
+                    scentProfile: "大馬士革玫瑰 1d + 乳香 1d + 荷荷巴油 10ml"
+                },
+                4: {
+                    id: "04",
+                    status: "locked",
+                    title: "終結經期內耗 | 女性全週期身心呵護",
+                    subtitle: "告別經前症候群的暴躁與痛楚，用香氣揉腹按摩溫柔調理。",
+                    desc: "經期前後的情緒崩潰，是由於體內荷爾蒙劇烈震盪。本章節專門針對女性週期生理學，使用天竺葵、快樂鼠尾草等雙向調節荷爾蒙的植物激素精油，搭配溫熱揉腹法，溫柔化解宮寒與浮躁。",
+                    scentProfile: "快樂鼠尾草 2d + 羅馬洋甘菊 1d + 天竺葵 1d"
+                },
+                5: {
+                    id: "05",
+                    status: "locked",
+                    title: "找回內在平靜 | 芳療概論與香冥想",
+                    subtitle: "在乳香與木質調引導下安定神識，掌握按下生活『暫停鍵』的能力。",
+                    desc: "現代人失去的不是時間，而是靜心的能力。本章節將芳香分子學與正念冥想結合，引導妳在早晨或深夜，用 10 分鐘的精油微薰香氣，建立個人的精神避風港，終結無謂的過度思考 (Overthinking)。",
+                    scentProfile: "乳香 2d + 歐洲冷杉 2d + 檀香 1d"
+                },
+                6: {
+                    id: "06",
+                    status: "locked",
+                    title: "開啟自我覺察 | 能量療癒與植物牌卡",
+                    subtitle: "結合數字能量與植物奧秘牌卡，讀取身體訊號與天賦鑰匙。",
+                    desc: "身體的痠痛與疲憊是靈魂的求救訊號。本課程教導如何結合生命數字流年與大自然能量牌卡，進行每日的能量自我檢測，從潛意識找出焦慮的核心癥結，以香氣作為解鎖與轉化的鑰匙。",
+                    scentProfile: "沒藥 2d + 廣藿香 1d + 佛手柑 2d"
+                }
+            };
+
+            if (isLoading) {
+                return (
+                    <div class="fixed inset-0 bg-luxury-obsidian z-[9999] flex flex-col justify-center items-center text-center p-6 transition-all duration-1000">
+                        <div class="space-y-12 max-w-lg w-full">
+                            <div class="space-y-3">
+                                <span class="text-luxury-gold uppercase text-xs tracking-[0.4em] block font-sans">K A R E N</span>
+                                <span class="text-white font-serif font-extralight text-3.5xl md:text-5xl block italic tracking-luxury">
+                                    the art of being.
+                                </span>
+                            </div>
+                            <div class="relative w-full h-[1px] bg-luxury-gold/10 rounded-full overflow-hidden max-w-xs mx-auto">
+                                <div 
+                                    class="absolute top-0 left-0 h-full bg-luxury-gold transition-all duration-100 ease-out"
+                                    style={{ width: `${loadingPercentage}%` }}
+                                ></div>
+                            </div>
+                            <p class="text-luxury-sage/70 text-xs tracking-[0.2em] font-sans">
+                                正在為您的靈魂調配香氣空間... {loadingPercentage}%
+                            </p>
+                        </div>
+                    </div>
+                );
+            }
+
+            return (
+                <div class="relative w-full min-h-screen pb-24 bg-luxury-obsidian">
+                    
+                    {/* 背景優雅呼吸光暈 */}
+                    <div class="absolute top-[8%] left-[5%] w-[550px] h-[550px] rounded-full bg-luxury-gold/5 luxury-breathing-glow pointer-events-none"></div>
+                    <div class="absolute bottom-[25%] right-[5%] w-[650px] h-[650px] rounded-full bg-luxury-sage/5 luxury-breathing-glow pointer-events-none" style={{ animationDelay: '5s' }}></div>
+
+                    {/* 精品導航 */}
+                    <nav class="relative z-50 max-w-7xl mx-auto px-8 py-8 flex justify-between items-center border-b border-luxury-gold/10">
+                        <div class="flex flex-col items-start">
+                            <span class="font-serif text-3xl md:text-4xl font-extralight tracking-[0.25em] text-white">K A R E N</span>
+                            <span class="text-[9px] tracking-[0.35em] uppercase text-luxury-gold mt-1 font-sans">Aroma & Numerology</span>
+                        </div>
+                        <div class="hidden md:flex items-center gap-8">
+                            <a href="#about" class="text-xs tracking-[0.2em] text-luxury-sage hover:text-luxury-gold uppercase transition">About</a>
+                            <a href="#energy-camp" class="text-xs tracking-[0.2em] text-luxury-sage hover:text-luxury-gold uppercase transition">能量校準營</a>
+                            <a href="#numerology-tool" class="text-xs tracking-[0.2em] text-luxury-sage hover:text-luxury-gold uppercase transition">靈數定位</a>
+                            <a href="#course-vault" class="text-xs tracking-[0.2em] text-luxury-sage hover:text-luxury-gold uppercase transition">六大課堂</a>
+                            <a href="#booking" class="text-xs tracking-[0.2em] text-luxury-sage hover:text-luxury-gold uppercase transition">一對一諮詢</a>
+                        </div>
+                    </nav>
+
+                    {/* HERO 區塊 */}
+                    <header class="relative min-h-[92vh] flex flex-col justify-center items-center px-8 text-center max-w-7xl mx-auto overflow-hidden">
+                        
+                        {/* 載入本機 front_page.jpg 作為首頁大圖底圖 */}
+                        <div class="absolute inset-0 bg-[#0c1310] z-0">
+                            <img 
+                                src="./images/front_page.jpg" 
+                                alt="Karen Homepage Front Cover" 
+                                class="w-full h-full object-cover opacity-[0.22] filter saturate-[0.6] brightness-[0.7] pointer-events-none"
+                            />
+                        </div>
+
+                        <div class="space-y-12 relative z-10">
+                            
+                            <p class="text-luxury-gold text-xs tracking-[0.45em] uppercase font-sans">
+                                — THERE IS NO SECRET RECIPE —
+                            </p>
+
+                            {/* 核心大標 */}
+                            <h1 class="text-handwritten text-5xl md:text-7xl lg:text-8xl font-normal leading-[1.3] text-white tracking-[0.05em] min-h-[150px] md:min-h-[200px]">
+                                {typedText}
+                                <span class="animate-pulse text-luxury-gold ml-2">|</span>
+                            </h1>
+
+                            <p class="max-w-4xl mx-auto text-luxury-sage body-editorial-lg text-center">
+                                我是 Karen。這裡不販賣焦慮，不堆疊繁雜的理論。<br />
+                                我將以優雅的「植物香氣 🌿」與「生命數字 🔮」作為妳靈魂的定錨，<br />
+                                陪伴迷惘、內耗的妳，放慢心跳，重新躺回安全的草地上深呼吸。
+                            </p>
+
+                            <div class="pt-8 flex flex-col sm:flex-row justify-center items-center gap-6">
+                                <a href="#energy-camp" class="w-full sm:w-auto bg-luxury-gold text-luxury-obsidian hover:bg-luxury-cream px-10 py-4 text-xs font-semibold tracking-[0.25em] uppercase transition-all duration-300 shadow-xl shadow-luxury-gold/5">
+                                    能量校準營・免費打卡
+                                </a>
+                                <a href="#numerology-tool" class="w-full sm:w-auto border border-luxury-sage/30 hover:border-luxury-gold hover:text-luxury-gold px-10 py-4 text-xs tracking-[0.25em] uppercase transition-all duration-300">
+                                    解鎖生命靈數
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 text-luxury-gold/30 text-xs tracking-[0.3em] font-sans animate-bounce text-center">
+                            SCROLL DOWN <br />
+                            <i class="fa-solid fa-chevron-down mt-3 text-[10px]"></i>
+                        </div>
+                    </header>
+
+                    {/* 關於品牌 */}
+                    <section id="about" class="py-32 bg-luxury-forest border-t border-b border-luxury-gold/10 relative">
+                        <div class="max-w-7xl mx-auto px-8 grid md:grid-cols-12 gap-16 items-center">
+                            
+                            <div class="md:col-span-5 relative group">
+                                <div class="absolute -inset-1 bg-luxury-gold/20 blur opacity-25 group-hover:opacity-40 transition duration-1000"></div>
+                                
+                                {/* 完美擬真還原 image_a2483b.png / image_a1dec6.jpg 金框卡片設計 */}
+                                <div class="relative bg-[#070d0a] border border-luxury-gold/15 p-3 overflow-hidden h-[580px] flex flex-col justify-end">
+                                    {/* 底圖：讀取本機 about_me.jpg */}
+                                    <img 
+                                        src="./images/about_me.jpg" 
+                                        alt="Karen Lying on grass" 
+                                        class="absolute inset-0 w-full h-full object-cover filter saturate-[0.4] brightness-[0.75] hover:scale-105 transition-all duration-700 z-0"
+                                    />
+                                    
+                                    {/* 上方精緻金屬絲線邊框與手寫字 */}
+                                    <div class="relative z-10 w-full p-4 mb-4">
+                                        <div class="border border-luxury-gold/30 bg-luxury-obsidian/95 backdrop-blur-md px-6 py-10 text-center flex flex-col justify-center items-center min-h-[180px]">
+                                            <p class="text-handwritten text-2.5xl text-luxury-gold leading-[1.8] tracking-widest">
+                                                「躺在草地上看天<br />
+                                                空，才看見焦慮是<br />
+                                                多麼渺小。」
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="md:col-span-7 space-y-10 text-left">
+                                <div class="space-y-2">
+                                    <span class="text-xs tracking-[0.35em] uppercase text-luxury-gold font-sans block">My Story</span>
+                                    <h2 class="text-handwritten text-4xl md:text-5xl text-white font-normal leading-tight">
+                                        15 年高壓行銷洗禮，<br />走回大自然「放空」的理科腦創作者
+                                    </h2>
+                                </div>
+                                
+                                <div class="text-luxury-sage body-editorial-lg space-y-6">
+                                    <p>
+                                        我也曾跟妳一樣。在講求極致效率、數字指標的廣告行銷圈拼命了 15 年，每個月都在為自己無效的內耗付出高昂的代價。
+                                    </p>
+                                    <p>
+                                        直到遇見了「植物香氣」與「生命數字」，我才懂得如何慢下來呼吸。我的理科腦讓我能夠系統化、科學地梳理生命數字與香氣的頻率對應；而我的感性靈魂，則希望能透過這片虛擬草地，誠實地接住每一個疲憊、緊繃的心靈。
+                                    </p>
+                                    <p class="text-handwritten text-luxury-gold text-2.5xl italic border-l-2 border-luxury-gold pl-6 py-2 my-6">
+                                        「這不是一個專家指點的網站，而是一個陪妳一起跌倒、再一起在草地上拍拍灰塵的溫柔樹洞。」
+                                    </p>
+                                </div>
+
+                                <div class="pt-8 grid grid-cols-3 gap-8 border-t border-luxury-gold/15 text-center">
+                                    <div class="space-y-2">
+                                        <p class="text-4xl font-serif text-luxury-gold font-extralight">15+</p>
+                                        <p class="text-[10px] tracking-[0.2em] text-luxury-sage uppercase">行銷與產品顧問經驗</p>
+                                    </div>
+                                    <div class="space-y-2">
+                                        <p class="text-4xl font-serif text-luxury-gold font-extralight">1-9</p>
+                                        <p class="text-[10px] tracking-[0.2em] text-luxury-sage uppercase">生命數字密碼解構</p>
+                                    </div>
+                                    <div class="space-y-2">
+                                        <p class="text-4xl font-serif text-luxury-gold font-extralight">100%</p>
+                                        <p class="text-[10px] tracking-[0.2em] text-luxury-sage uppercase">真實與真誠的陪伴</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </section>
+
+                    {/* 21天能量校準營 */}
+                    <section id="energy-camp" class="py-32 max-w-7xl mx-auto px-8 relative">
+                        <div class="text-center space-y-6 mb-20">
+                            <span class="text-xs tracking-[0.35em] uppercase text-luxury-gold font-sans block">能量定錨 ✕ 21天共修</span>
+                            <h2 class="text-handwritten text-5xl text-white font-normal">21天能量校準營</h2>
+                            <p class="text-luxury-sage max-w-3xl mx-auto body-editorial-lg">
+                                在生命能量轉換的關鍵節點 🔮<br />
+                                用連續三週的時間——淨化釋放 → 目標顯化 → 落地執行，一起清除舊能量、校準下半年人生方向、活出更高版本的自己 ✨
+                            </p>
+                        </div>
+
+                        {/* 三階段地圖 */}
+                        <div class="grid md:grid-cols-3 gap-8 mb-20 relative">
+                            <div class="hidden md:block absolute top-[45px] left-[15%] right-[15%] h-[1px] border-t border-dashed border-luxury-gold/20 z-0"></div>
+                            
+                            {/* 階段一 */}
+                            <div 
+                                class="bg-[#0f1814] border border-luxury-gold p-8 flex flex-col items-center text-center relative z-10 rounded-none bg-cover bg-center min-h-[340px] justify-center"
+                                style={{ 
+                                    backgroundImage: 'linear-gradient(rgba(15, 24, 20, 0.88), rgba(7, 13, 10, 0.95)), url("./images/stage1_purify.jpg")' 
+                                }}
+                            >
+                                <div class="w-12 h-12 bg-luxury-gold text-luxury-obsidian flex items-center justify-center font-serif text-lg mb-4 rounded-full">1</div>
+                                <span class="text-[10px] text-luxury-gold tracking-[0.25em] font-sans uppercase">第一階段 | 淨化與釋放</span>
+                                <h4 class="text-handwritten text-3xl text-white my-3">淨化 ✕ 釋放</h4>
+                                <p class="text-sm text-luxury-sage leading-relaxed">清空內耗與疲態，釋放負擔，為自己留白。每日推薦香氣與淨化冥想。</p>
+                                <span class="mt-5 text-[9px] tracking-[0.25em] bg-luxury-gold/15 text-luxury-gold px-4 py-1.5 uppercase animate-pulse">進行中 CURRENT</span>
+                            </div>
+
+                            {/* 階段二 */}
+                            <div 
+                                class="bg-[#0f1814] border border-luxury-gold/10 p-8 flex flex-col items-center text-center relative z-10 rounded-none bg-cover bg-center min-h-[340px] justify-center"
+                                style={{ 
+                                    backgroundImage: 'linear-gradient(rgba(15, 24, 20, 0.9), rgba(7, 13, 10, 0.97)), url("./images/stage2_manifest.jpg")' 
+                                }}
+                            >
+                                <div class="w-12 h-12 bg-luxury-obsidian border border-luxury-gold/20 text-luxury-gold flex items-center justify-center font-serif text-lg mb-4 rounded-full">2</div>
+                                <span class="text-[10px] text-luxury-sage/60 tracking-[0.25em] font-sans uppercase">第二階段 | 目標顯化</span>
+                                <h4 class="text-handwritten text-3xl text-white/50 my-3">校準 ✕ 顯化</h4>
+                                <p class="text-sm text-luxury-sage/60 leading-relaxed">錨定豐盛與光明，啟動新能量。四季牌陣、書寫與音療調頻。</p>
+                                <button 
+                                    onClick={() => triggerNotifyModal("能量校準營第二階段：校準 ✕ 顯化")}
+                                    class="mt-5 text-[9px] tracking-[0.25em] border border-luxury-gold/20 text-luxury-gold hover:bg-luxury-gold hover:text-luxury-obsidian px-4 py-1.5 uppercase transition"
+                                >
+                                    預約提醒 NOTIFY ME
+                                </button>
+                            </div>
+
+                            {/* 階段三 */}
+                            <div 
+                                class="bg-[#0f1814] border border-luxury-gold/10 p-8 flex flex-col items-center text-center relative z-10 rounded-none bg-cover bg-center min-h-[340px] justify-center"
+                                style={{ 
+                                    backgroundImage: 'linear-gradient(rgba(15, 24, 20, 0.9), rgba(7, 13, 10, 0.97)), url("./images/stage3_grounding.jpg")' 
+                                }}
+                            >
+                                <div class="w-12 h-12 bg-luxury-obsidian border border-luxury-gold/20 text-luxury-gold flex items-center justify-center font-serif text-lg mb-4 rounded-full">3</div>
+                                <span class="text-[10px] text-luxury-sage/60 tracking-[0.25em] font-sans uppercase">第三階段 | 落地執行</span>
+                                <h4 class="text-handwritten text-3xl text-white/50 my-3">整合 ✕ 落地</h4>
+                                <p class="text-sm text-luxury-sage/60 leading-relaxed">將高頻能量落實日常，建立情緒與生活防護力。香氣結營共修。</p>
+                                <button 
+                                    onClick={() => triggerNotifyModal("能量校準營第三階段：整合 ✕ 落地")}
+                                    class="mt-5 text-[9px] tracking-[0.25em] border border-luxury-gold/20 text-luxury-gold hover:bg-luxury-gold hover:text-luxury-obsidian px-4 py-1.5 uppercase transition"
+                                >
+                                    預約提醒 NOTIFY ME
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* 第一階段 每日功課與打卡區 */}
+                        <div class="border border-luxury-gold/30 bg-luxury-obsidian p-8 md:p-14">
+                            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 border-b border-luxury-gold/15 pb-10 mb-10">
+                                <div>
+                                    <span class="text-xs text-luxury-gold font-sans tracking-[0.3em] uppercase block">📅 ACTIVE PROGRAM SCHEDULE</span>
+                                    <h3 class="text-handwritten text-3.5xl text-white mt-2">第一階段共修：淨化與釋放（連續七天）</h3>
+                                    <p class="text-xs text-luxury-sage mt-2">🎬 附上第一階段說明影片（含三階段安排 / 每日香氣冥想指引 / 線上打卡手冊使用演示），建議看完再開始第一天功課。</p>
+                                </div>
+                                <div class="bg-luxury-forest border border-luxury-gold/15 p-4 flex flex-col gap-2 shrink-0">
+                                    <div class="flex items-center gap-3">
+                                        <i class="fa-solid fa-circle-nodes text-luxury-gold animate-ping text-xs"></i>
+                                        <span class="text-xs text-luxury-sage tracking-wider">每晚 10 點群內分享 | 小結會 21:30</span>
+                                    </div>
+                                    <button 
+                                        onClick={() => showToast("🎬 正在開啟說明影片... 準備好妳的精油/香氣 + 蠟燭，我們明天正式啟程 🙌")}
+                                        class="text-left text-[10px] text-luxury-gold hover:underline flex items-center gap-1.5"
+                                    >
+                                        <i class="fa-regular fa-circle-play"></i> 觀看第一階段說明影片演示
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="grid lg:grid-cols-12 gap-10 items-stretch">
+                                {/* 左側 7 天切換 */}
+                                <div class="lg:col-span-4 flex flex-col gap-4">
+                                    <span class="text-xs text-luxury-gold font-sans tracking-[0.25em] uppercase block">選擇功課天數：</span>
+                                    <div class="grid grid-cols-2 lg:grid-cols-1 gap-3">
+                                        {[1, 2, 3, 4, 5, 6, 7].map(day => (
+                                            <button
+                                                key={day}
+                                                onClick={() => setSelectedDay(day)}
+                                                class={`p-4 border text-left flex items-center justify-between transition-all duration-300 rounded-none ${
+                                                    selectedDay === day
+                                                        ? 'bg-luxury-gold border-luxury-gold text-luxury-obsidian'
+                                                        : 'bg-luxury-forest/40 border-luxury-gold/10 hover:border-luxury-gold/50 text-luxury-cream'
+                                                }`}
+                                            >
+                                                <span class="text-handwritten text-2xl font-normal tracking-widest">Day {day} 課程功課</span>
+                                                <div class="flex items-center gap-3">
+                                                    <span class="text-[10px] opacity-70 font-sans">{`DAY 0${day}`}</span>
+                                                    {checkedDays[day] ? (
+                                                        <i class="fa-solid fa-circle-check text-luxury-gold"></i>
+                                                    ) : (
+                                                        <i class="fa-regular fa-circle text-luxury-sage/30 text-xs"></i>
+                                                    )}
+                                                </div>
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                {/* 右側內容展示 */}
+                                <div class="lg:col-span-8 bg-luxury-forest/20 p-8 md:p-10 border border-luxury-gold/10 flex flex-col justify-between">
+                                    <div class="space-y-8">
+                                        <div class="flex justify-between items-start border-b border-luxury-gold/15 pb-6">
+                                            <div>
+                                                <span class="text-xs text-luxury-gold font-sans tracking-[0.25em] uppercase">{dailyProgram[selectedDay].date}</span>
+                                                <h4 class="text-handwritten text-3.5xl text-white mt-2">{dailyProgram[selectedDay].title}</h4>
+                                            </div>
+                                            <div class="flex items-center gap-2 bg-luxury-gold/10 border border-luxury-gold/30 text-luxury-gold px-4 py-1.5 text-xs tracking-widest">
+                                                <i class="fa-solid fa-sparkles text-[10px]"></i>
+                                                <span class="uppercase">關鍵能量：{dailyProgram[selectedDay].theme}</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="space-y-6">
+                                            
+                                            {/* 實體香氣卡片展示 */}
+                                            <div 
+                                                class="relative overflow-hidden bg-cover bg-center border border-luxury-gold/30 p-6 shadow-xl min-h-[220px] flex flex-col justify-center bg-[#070d0a]"
+                                                style={{ 
+                                                    backgroundImage: dailyProgram[selectedDay].localImage 
+                                                        ? `linear-gradient(rgba(15, 24, 20, 0.85), rgba(7, 13, 10, 0.95)), url(${dailyProgram[selectedDay].localImage})` 
+                                                        : 'linear-gradient(to right, #0f1814, #070d0a)' 
+                                                }}
+                                            >
+                                                <div class="absolute top-0 right-0 p-4 opacity-10 pointer-events-none">
+                                                    <i class="fa-solid fa-seedling text-8xl text-luxury-gold"></i>
+                                                </div>
+                                                <div class="space-y-3 relative z-10">
+                                                    <div class="flex items-center gap-2 text-xs text-luxury-gold font-sans uppercase tracking-[0.2em]">
+                                                        <span>{dailyProgram[selectedDay].title}</span>
+                                                        <span>|</span>
+                                                        <span class="bg-luxury-gold/15 px-2 py-0.5 rounded text-[10px]">{dailyProgram[selectedDay].theme}</span>
+                                                    </div>
+                                                    <h5 class="text-handwritten text-2.5xl text-white font-semibold">「{dailyProgram[selectedDay].affirmation}」</h5>
+                                                    <p class="text-sm text-luxury-sage/90 leading-relaxed border-t border-luxury-gold/10 pt-3">
+                                                        {dailyProgram[selectedDay].description}
+                                                    </p>
+                                                </div>
+                                            </div>
+
+                                            <div class="bg-luxury-obsidian/40 p-5 border-l-2 border-luxury-gold">
+                                                <p class="text-[10px] text-luxury-gold tracking-[0.25em] uppercase font-sans mb-1">🌿 每日推薦香氣處方：</p>
+                                                <p class="text-sm text-luxury-cream font-medium italic">{dailyProgram[selectedDay].scent}</p>
+                                            </div>
+
+                                            <div class="bg-luxury-obsidian/30 p-6 border border-luxury-gold/10">
+                                                <p class="text-xs text-luxury-gold tracking-[0.25em] font-sans uppercase mb-3">📒 今日打卡冥想練習指引：</p>
+                                                <p class="text-sm text-luxury-sage leading-relaxed">{dailyProgram[selectedDay].practice}</p>
+                                            </div>
+                                            
+                                            {/* 已填寫的打卡心得 */}
+                                            {checkedDays[selectedDay] && diaryEntries[selectedDay] && (
+                                                <div class="bg-luxury-gold/5 border border-dashed border-luxury-gold/20 p-5 space-y-3">
+                                                    <p class="text-[10px] text-luxury-gold tracking-[0.2em] font-sans uppercase flex items-center gap-1">
+                                                        <i class="fa-solid fa-signature"></i> 妳已留下的靈魂心得：
+                                                    </p>
+                                                    <p class="text-xs text-luxury-sage italic">「{diaryEntries[selectedDay].meditationNote}」</p>
+                                                    <p class="text-[10px] text-luxury-gold tracking-[0.2em] font-sans uppercase mt-2">✨ 妳已釋放的負擔：</p>
+                                                    <p class="text-xs text-luxury-sage italic">「{diaryEntries[selectedDay].releaseNote}」</p>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    {/* 打卡互動 */}
+                                    <div class="pt-8 border-t border-luxury-gold/15 flex flex-col sm:flex-row justify-between items-center gap-6 mt-8">
+                                        
+                                        <div class="flex items-center gap-5">
+                                            <div class="relative w-16 h-16 bg-luxury-obsidian border border-luxury-gold/20 flex flex-col items-center justify-center">
+                                                {checkedDays[selectedDay] ? (
+                                                    <div class="relative mt-1">
+                                                        <div class="w-2.5 h-5 bg-gradient-to-t from-red-400 via-luxury-gold to-white rounded-full luxury-candle-flame"></div>
+                                                        <div class="w-[1px] h-2 bg-luxury-cream/40 mx-auto -mt-1 rounded-full"></div>
+                                                    </div>
+                                                ) : (
+                                                    <div class="text-luxury-sage/20">
+                                                        <i class="fa-solid fa-fire text-lg animate-pulse"></i>
+                                                    </div>
+                                                )}
+                                                <span class="text-[9px] tracking-widest text-luxury-gold mt-2 uppercase font-sans">
+                                                    {checkedDays[selectedDay] ? "已點亮" : "未點亮"}
+                                                </span>
+                                            </div>
+                                            <div class="text-left">
+                                                <p class="text-[10px] text-luxury-gold tracking-[0.25em] uppercase font-sans">REQUIRED MATERIALS</p>
+                                                <p class="text-sm text-luxury-sage mt-1">備妥精油/香氣 + 蠟燭，開啟療癒</p>
+                                            </div>
+                                        </div>
+
+                                        <button
+                                            onClick={() => openDiaryForm(selectedDay)}
+                                            class={`w-full sm:w-auto px-10 py-4 text-xs tracking-[0.25em] uppercase font-semibold transition duration-300 ${
+                                                checkedDays[selectedDay]
+                                                ? 'bg-luxury-gold/10 border border-luxury-gold text-luxury-gold hover:bg-luxury-gold hover:text-luxury-obsidian'
+                                                : 'bg-luxury-gold text-luxury-obsidian hover:bg-luxury-cream'
+                                            }`}
+                                        >
+                                            {checkedDays[selectedDay] ? "修改今日打卡手冊" : "開啟打卡手冊・點亮蠟燭"}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* 互動專區：生命靈數能量與命定香氣解碼 */}
+                    <section id="numerology-tool" class="py-32 max-w-7xl mx-auto px-8 relative">
+                        <div class="text-center space-y-6 mb-20">
+                            <span class="text-xs tracking-[0.35em] uppercase text-luxury-gold font-sans block">Aroma & Destiny Decoder</span>
+                            <h2 class="text-handwritten text-5xl text-white font-normal">生命數字與命定香氣定位解密</h2>
+                            <p class="text-luxury-sage max-w-2xl mx-auto body-editorial-lg">
+                                輸入妳的西元出生年月日，讓 Karen 的演算法為妳梳理出妳的「靈魂特質」、「內耗盲區」與對應的精油防禦處方。
+                            </p>
+                        </div>
+
+                        <div class="grid md:grid-cols-12 gap-12 items-stretch">
+                            {/* 表單 */}
+                            <div class="md:col-span-5 bg-luxury-forest border border-luxury-gold/15 p-10 flex flex-col justify-between">
+                                <form onSubmit={calculateNumerology} class="space-y-8">
+                                    <h3 class="text-handwritten text-3xl text-white tracking-luxury">🔮 靈魂能量運算</h3>
+                                    
+                                    <div class="space-y-6">
+                                        <div class="space-y-2">
+                                            <label class="text-[10px] text-luxury-gold uppercase tracking-[0.25em] font-sans block">西元出生年 (YYYY)</label>
+                                            <input 
+                                                type="number" 
+                                                value={birthDate.year} 
+                                                onChange={(e) => setBirthDate({...birthDate, year: e.target.value})}
+                                                placeholder="例如: 1995"
+                                                class="w-full bg-luxury-obsidian border border-luxury-gold/15 focus:border-luxury-gold px-4 py-3 text-sm text-luxury-cream placeholder-luxury-sage/30 outline-none transition-all rounded-none"
+                                                required 
+                                            />
+                                        </div>
+                                        
+                                        <div class="grid grid-cols-2 gap-6">
+                                            <div class="space-y-2">
+                                                <label class="text-[10px] text-luxury-gold uppercase tracking-[0.25em] font-sans block">月份 (MM)</label>
+                                                <input 
+                                                    type="number" 
+                                                    value={birthDate.month} 
+                                                    onChange={(e) => setBirthDate({...birthDate, month: e.target.value})}
+                                                    placeholder="06"
+                                                    class="w-full bg-luxury-obsidian border border-luxury-gold/15 focus:border-luxury-gold px-4 py-3 text-sm text-luxury-cream placeholder-luxury-sage/30 outline-none transition-all rounded-none"
+                                                    required 
+                                                    min="1" max="12"
+                                                />
+                                            </div>
+                                            <div class="space-y-2">
+                                                <label class="text-[10px] text-luxury-gold uppercase tracking-[0.25em] font-sans block">日期 (DD)</label>
+                                                <input 
+                                                    type="number" 
+                                                    value={birthDate.day} 
+                                                    onChange={(e) => setBirthDate({...birthDate, day: e.target.value})}
+                                                    placeholder="21"
+                                                    class="w-full bg-luxury-obsidian border border-luxury-gold/15 focus:border-luxury-gold px-4 py-3 text-sm text-luxury-cream placeholder-luxury-sage/30 outline-none transition-all rounded-none"
+                                                    required 
+                                                    min="1" max="31"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <button 
+                                        type="submit"
+                                        class="w-full bg-luxury-gold text-luxury-obsidian hover:bg-luxury-cream py-4 text-xs tracking-[0.25em] uppercase font-semibold transition-all duration-300"
+                                    >
+                                        解鎖我的命定能量
+                                    </button>
+                                </form>
+
+                                <p class="text-[10px] text-luxury-sage/50 mt-10 leading-relaxed uppercase tracking-[0.1em] font-sans">
+                                    *說明：此算法根據西元年月日進行疊加，反映妳的核心性格與內耗。
+                                </p>
+                            </div>
+
+                            {/* 結果 */}
+                            <div class="md:col-span-7 bg-luxury-forest/40 border border-luxury-gold/10 p-10 md:p-14 flex flex-col justify-center">
+                                {numProfile ? (
+                                    <div class="space-y-8">
+                                        <div class="flex items-center gap-6 border-b border-luxury-gold/15 pb-6">
+                                            <div class="w-20 h-20 bg-luxury-gold/10 border border-luxury-gold flex items-center justify-center text-4xl font-serif text-luxury-gold">
+                                                {calculatedNum}
+                                            </div>
+                                            <div>
+                                                <span class="text-[10px] text-luxury-gold font-sans tracking-[0.3em] uppercase block">LUCKY PATH ENERGY</span>
+                                                <h4 class="text-handwritten text-3xl text-white mt-1">{numProfile.title}</h4>
+                                            </div>
+                                        </div>
+
+                                        <div class="space-y-6 text-luxury-cream">
+                                            <div class="bg-luxury-obsidian/40 border border-luxury-gold/10 p-6">
+                                                <p class="text-xs text-luxury-gold tracking-[0.25em] font-sans uppercase mb-3">【 能量盲區與內耗特質 】</p>
+                                                <p class="text-base text-luxury-sage leading-relaxed">{numProfile.char}</p>
+                                            </div>
+
+                                            <div class="bg-luxury-gold/5 border border-dashed border-luxury-gold/30 p-6 space-y-4">
+                                                <p class="text-xs text-luxury-gold tracking-[0.25em] font-sans uppercase">🔑 命定調香定錨配方</p>
+                                                <p class="font-serif text-3xl text-white font-extralight italic">{numProfile.scent}</p>
+                                                <p class="text-sm text-luxury-sage leading-relaxed">{numProfile.practice}</p>
+                                            </div>
+                                        </div>
+
+                                        <div class="pt-6 flex flex-col sm:flex-row gap-4">
+                                            <a href="#booking" class="bg-luxury-gold text-luxury-obsidian text-center py-4 px-10 text-xs tracking-[0.25em] uppercase font-semibold transition-all duration-300 hover:bg-luxury-cream">
+                                                預約一對一深度調香諮詢
+                                            </a>
+                                            <button 
+                                                onClick={() => { setCalculatedNum(null); setNumProfile(null); }}
+                                                class="border border-luxury-sage/30 hover:border-white text-luxury-sage hover:text-white py-4 px-10 text-xs tracking-[0.25em] uppercase transition-all duration-300"
+                                            >
+                                                重置重新計算
+                                            </button>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div class="text-center space-y-8 py-16 text-luxury-sage">
+                                        <i class="fa-solid fa-wand-magic-sparkles text-5xl text-luxury-gold/30 animate-pulse"></i>
+                                        <h4 class="text-handwritten text-3.5xl text-white font-normal">「輸入生日，聽聽妳靈魂的香氣回響」</h4>
+                                        <p class="max-w-md mx-auto text-sm leading-relaxed tracking-[0.05em]">
+                                            算好之後，Karen 將為妳精準解鎖妳一輩子的「身心自愛與情緒防護處方」。
+                                        </p>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* 六大精油與靈魂課堂 (全鎖定) */}
+                    <section id="course-vault" class="py-32 bg-luxury-forest border-t border-b border-luxury-gold/10 relative">
+                        <div class="max-w-7xl mx-auto px-8">
+                            
+                            <div class="text-center space-y-6 mb-20">
+                                <span class="text-xs tracking-[0.35em] uppercase text-luxury-gold font-sans block">Aroma Alchemy Vault</span>
+                                <h2 class="text-handwritten text-5xl text-white font-normal">芳療全方位生活實踐・六大課堂秘境</h2>
+                                <p class="text-luxury-sage max-w-3xl mx-auto body-editorial-lg">
+                                    這是一套帶得走的居家頂級療癒系統。結合植物化學與心理學，<br />
+                                    我將陸續解鎖這六大核心能量解方，陪伴妳和家人安頓身心。
+                                </p>
+                            </div>
+
+                            {/* 六課堂切換按鈕卡片組 */}
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+                                {Object.keys(coursesData).map(id => {
+                                    const course = coursesData[id];
+                                    const isActive = selectedCourseId === parseInt(id);
+                                    const isUnlocked = course.status === "unlocked";
+
+                                    return (
+                                        <div 
+                                            key={id}
+                                            onClick={() => setSelectedCourseId(parseInt(id))}
+                                            class={`p-8 border cursor-pointer transition-all duration-300 relative ${
+                                                isActive 
+                                                ? 'bg-luxury-obsidian border-luxury-gold' 
+                                                : 'bg-luxury-obsidian/40 border-luxury-gold/10 hover:border-luxury-gold/30'
+                                            }`}
+                                        >
+                                            {/* 課堂狀態 Tag */}
+                                            <div class="absolute top-6 right-6 flex items-center gap-2">
+                                                {isUnlocked ? (
+                                                    <span class="text-[9px] tracking-widest text-luxury-gold bg-luxury-gold/10 px-2 py-0.5 uppercase">已開放</span>
+                                                ) : (
+                                                    <span class="text-[9px] tracking-widest text-luxury-sage/40 bg-luxury-sage/5 px-2 py-0.5 uppercase flex items-center gap-1">
+                                                        <i class="fa-solid fa-lock text-[8px]"></i> 醞釀中
+                                                    </span>
+                                                )}
+                                            </div>
+
+                                            <span class="font-serif text-3xl text-luxury-gold/30 block mb-4">{course.id}</span>
+                                            <h3 class="text-handwritten text-2.5xl text-white mb-2">{course.title.split(' | ')[0]}</h3>
+                                            <p class="text-xs text-luxury-sage tracking-wider uppercase mb-4">{course.title.split(' | ')[1] || ""}</p>
+                                            <p class="text-sm text-luxury-sage/70 line-clamp-2 leading-relaxed">{course.subtitle}</p>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+
+                            {/* 選定課堂的深度展示櫃 */}
+                            <div class="bg-luxury-obsidian border border-luxury-gold/20 p-8 md:p-12">
+                                {(() => {
+                                    const curCourse = coursesData[selectedCourseId];
+                                    const isUnlocked = curCourse.status === "unlocked";
+
+                                    return (
+                                        <div class="grid md:grid-cols-12 gap-10 items-center">
+                                            <div class="md:col-span-4 relative">
+                                                {/* 課堂象徵性圖案 */}
+                                                <div class="aspect-square bg-luxury-forest border border-luxury-gold/15 flex flex-col justify-center items-center p-8 text-center space-y-6">
+                                                    <span class="font-serif text-6xl text-luxury-gold/20">{curCourse.id}</span>
+                                                    <h4 class="text-handwritten text-3xl text-white">{curCourse.title.split(' | ')[0]}</h4>
+                                                    <div class="w-12 h-[1px] bg-luxury-gold/30"></div>
+                                                    <p class="text-xs tracking-widest text-luxury-gold uppercase font-sans">配方基調 : {curCourse.scentProfile.split(' + ')[0]}</p>
+                                                </div>
+                                            </div>
+
+                                            <div class="md:col-span-8 space-y-6">
+                                                <div class="flex items-center gap-3">
+                                                    <span class="text-xs text-luxury-gold font-sans tracking-[0.25em] uppercase">CURRICULUM CHAPTER</span>
+                                                    <span class={`text-[9px] tracking-widest px-3 py-0.5 uppercase ${isUnlocked ? 'bg-luxury-gold/10 text-luxury-gold' : 'bg-white/5 text-white/40'}`}>
+                                                        {isUnlocked ? "UNLOCKED 核心心法已開放" : "PRE-HEAT 醞釀預熱中"}
+                                                    </span>
+                                                </div>
+                                                <h3 class="text-handwritten text-3.5xl text-white">{curCourse.title}</h3>
+                                                <p class="text-luxury-sage/80 leading-relaxed text-base body-editorial-lg">{curCourse.desc}</p>
+                                                
+                                                {isUnlocked ? (
+                                                    <div class="bg-luxury-forest border border-luxury-gold/15 p-6 space-y-3">
+                                                        <p class="text-xs text-luxury-gold tracking-[0.2em] font-sans uppercase">💡 Karen 導師試閱私房心法 :</p>
+                                                        <p class="text-sm text-luxury-sage leading-relaxed">{curCourse.unlockedContent}</p>
+                                                    </div>
+                                                ) : (
+                                                    <div class="bg-luxury-forest/50 border border-dashed border-luxury-gold/20 p-6 flex flex-col sm:flex-row justify-between items-center gap-6">
+                                                        <div>
+                                                            <p class="text-xs text-luxury-gold tracking-[0.2em] font-sans uppercase">🔒 本堂課預計於流年交接期解鎖</p>
+                                                            <p class="text-xs text-luxury-sage mt-1">留下妳的聯絡信箱，解鎖時妳將第一時間收到調香講義。</p>
+                                                        </div>
+                                                        <button 
+                                                            onClick={() => triggerNotifyModal(curCourse.title)}
+                                                            class="bg-luxury-gold text-luxury-obsidian px-6 py-3 text-xs tracking-[0.2em] uppercase font-bold hover:bg-luxury-cream transition animate-pulse"
+                                                        >
+                                                            加入等待解鎖名單
+                                                        </button>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+                                    );
+                                })()}
+                            </div>
+
+                        </div>
+                    </section>
+
+                    {/* 預約與諮詢系統 */}
+                    <section id="booking" class="py-32 max-w-6xl mx-auto px-8 relative">
+                        <div class="bg-luxury-forest border border-luxury-gold/20 overflow-hidden shadow-2xl grid md:grid-cols-12 gap-8 items-stretch">
+                            
+                            <div class="md:col-span-5 bg-luxury-obsidian p-10 md:p-14 flex flex-col justify-between space-y-10 relative border-r border-luxury-gold/10">
+                                <div class="space-y-6">
+                                    <span class="text-xs tracking-[0.35em] uppercase text-luxury-gold font-sans block">Aroma & Numerology Session</span>
+                                    <h3 class="text-handwritten text-4.5xl text-white leading-tight">與 Karen 開啟<br />專屬妳的能量定錨</h3>
+                                    <p class="text-luxury-sage text-sm font-light leading-relaxed">
+                                        結合西元生命數字（1-9號靈魂密碼）與精油植物人格。找出妳此時身心內耗的突破口，並調配出專屬妳此刻流年的「身心定錨香氣瓶」（實體郵寄）。
+                                    </p>
+                                </div>
+
+                                <div class="space-y-4 text-xs text-luxury-sage tracking-[0.05em] leading-relaxed font-sans">
+                                    <div class="flex items-center gap-4">
+                                        <i class="fa-regular fa-clock text-luxury-gold text-sm"></i>
+                                        <span>深度個案 90 分鐘 (包含靈數與調香)</span>
+                                    </div>
+                                    <div class="flex items-center gap-4">
+                                        <i class="fa-solid fa-map-location-dot text-luxury-gold text-sm"></i>
+                                        <span>線上 Google Meet 隱密會議室</span>
+                                    </div>
+                                    <div class="flex items-center gap-4">
+                                        <i class="fa-solid fa-box-tissue text-luxury-gold text-sm"></i>
+                                        <span>諮詢後客製香氣瓶免運寄送到家</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="md:col-span-7 p-10 md:p-14">
+                                <form onSubmit={(e) => { e.preventDefault(); showToast("✨ 預約請求已送出！Karen 會在 24 小時內與妳聯繫安排時間。"); }} class="space-y-8">
+                                    <h4 class="text-handwritten text-3xl text-white tracking-luxury">🔮 預約我的專屬療癒席次</h4>
+                                    
+                                    <div class="space-y-4">
+                                        <label class="text-[10px] tracking-[0.25em] text-luxury-gold font-sans uppercase block">1. 選擇期望時段</label>
+                                        <div class="grid grid-cols-2 gap-4">
+                                            {["午後放空 (14:00 - 15:30)", "睡前定錨 (20:00 - 21:30)"].map((time) => (
+                                                <button
+                                                    type="button"
+                                                    key={time}
+                                                    class="py-4 px-2 border border-luxury-gold/15 hover:border-luxury-gold bg-luxury-obsidian text-[11px] tracking-wider text-luxury-cream text-center transition rounded-none"
+                                                >
+                                                    {time}
+                                                </button>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    <div class="space-y-4">
+                                        <label class="text-[10px] tracking-[0.25em] text-luxury-gold font-sans uppercase block">2. 填寫妳的資訊</label>
+                                        <input 
+                                            required
+                                            type="text" 
+                                            placeholder="妳的名字或稱呼" 
+                                            class="w-full bg-luxury-obsidian/50 border border-luxury-gold/15 focus:border-luxury-gold px-4 py-3 text-sm text-luxury-cream placeholder-luxury-sage/30 outline-none transition-all rounded-none"
+                                        />
+                                        <input 
+                                            required
+                                            type="email" 
+                                            placeholder="電子信箱" 
+                                            class="w-full bg-luxury-obsidian/50 border border-luxury-gold/15 focus:border-luxury-gold px-4 py-3 text-sm text-luxury-cream placeholder-luxury-sage/30 outline-none transition-all rounded-none"
+                                        />
+                                        <textarea 
+                                            placeholder="聊聊妳最近的身心內耗問題、或是想透過生命數字與芳療改善什麼..." 
+                                            rows="3"
+                                            class="w-full bg-luxury-obsidian/50 border border-luxury-gold/15 focus:border-luxury-gold px-4 py-3 text-sm text-luxury-cream placeholder-luxury-sage/30 outline-none transition-all resize-none rounded-none"
+                                        ></textarea>
+                                    </div>
+
+                                    <button 
+                                        type="submit" 
+                                        class="w-full bg-luxury-gold text-luxury-obsidian hover:bg-luxury-cream py-4 text-xs tracking-[0.25em] uppercase font-semibold transition-all duration-300"
+                                    >
+                                        預約 90 分鐘深度療癒個案席次 (NT$ 3,600)
+                                    </button>
+                                </form>
+                            </div>
+
+                        </div>
+                    </section>
+
+                    {/* 頁尾 */}
+                    <footer class="bg-luxury-obsidian py-24 border-t border-luxury-gold/10 text-center relative z-10">
+                        <div class="max-w-4xl mx-auto px-8 space-y-10">
+                            <h2 class="text-handwritten text-4.5xl text-luxury-gold italic">
+                                there is no secret recipe.
+                            </h2>
+                            
+                            <p class="text-luxury-sage font-light max-w-md mx-auto text-sm leading-relaxed tracking-wider">
+                                世界很吵，這裡永遠有一片安全的草地。<br />
+                                歡迎妳隨時回來躺著，找回呼吸的節奏。
+                            </p>
+
+                            <div class="flex justify-center gap-8 text-xs tracking-[0.2em] text-luxury-sage/50 font-sans uppercase">
+                                <span>hello@karenhealing.com</span>
+                                <span>|</span>
+                                <span>© 2026 by Karen. All Rights Reserved.</span>
+                            </div>
+                        </div>
+                    </footer>
+
+                    {/* 右下角精品低頻呼吸合成器 */}
+                    <div class="fixed bottom-8 right-8 z-50">
+                        <button 
+                            onClick={toggleNatureSound}
+                            class={`w-14 h-14 rounded-full flex items-center justify-center border transition-all duration-500 shadow-2xl ${
+                                isPlayingAudio 
+                                ? 'bg-luxury-gold border-luxury-gold text-luxury-obsidian animate-pulse' 
+                                : 'bg-luxury-obsidian border-luxury-gold/30 text-luxury-gold hover:border-luxury-gold'
+                            }`}
+                            title="開啟 432Hz 呼吸音療定錨聲"
+                        >
+                            {isPlayingAudio ? (
+                                <i class="fa-solid fa-volume-high text-lg"></i>
+                            ) : (
+                                <i class="fa-solid fa-volume-xmark text-lg"></i>
+                            )}
+                        </button>
+                        {!isPlayingAudio && (
+                            <span class="absolute -top-1 -right-1 flex h-3 w-3">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-luxury-gold opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-3 w-3 bg-luxury-gold"></span>
+                            </span>
+                        )}
+                    </div>
+
+                    {/* 精緻 Toast 提示 */}
+                    {activeToast && (
+                        <div class="fixed top-8 left-1/2 -translate-x-1/2 z-[9999] bg-luxury-forest border border-luxury-gold text-luxury-cream py-4 px-8 rounded-none shadow-2xl max-w-md w-full text-center text-xs tracking-wider uppercase animate-bounce">
+                            {activeToast}
+                        </div>
+                    )}
+
+                    {/* 解鎖通知 Modal */}
+                    {isNotifyModalOpen && (
+                        <div class="fixed inset-0 bg-luxury-obsidian/95 z-[999] flex items-center justify-center p-6 backdrop-blur-md">
+                            <div class="bg-luxury-forest border border-luxury-gold/30 max-w-md w-full rounded-none p-8 md:p-10 relative space-y-6">
+                                <button 
+                                    onClick={() => setIsNotifyModalOpen(false)}
+                                    class="absolute top-6 right-6 text-luxury-sage hover:text-white text-2xl"
+                                >
+                                    <i class="fa-solid fa-xmark"></i>
+                                </button>
+                                
+                                <div class="space-y-2">
+                                    <span class="text-xs text-luxury-gold font-sans tracking-[0.3em] uppercase block">WAITING LIST SIGNUP</span>
+                                    <h3 class="text-handwritten text-3xl text-white">課堂能量預熱・加入等待名單</h3>
+                                </div>
+                                
+                                <p class="text-luxury-sage text-sm leading-relaxed">
+                                    您即將加入 **{notifyTarget}** 的解鎖通知名單。Karen 將在課程正式開啟或更新的第一時間，將課堂調香講義與限時試聽連結發送至您的信箱。
+                                </p>
+
+                                <form onSubmit={handleSubscribe} class="space-y-4">
+                                    <input 
+                                        required
+                                        type="email" 
+                                        value={emailInput}
+                                        onChange={(e) => setEmailInput(e.target.value)}
+                                        placeholder="輸入妳的電子信箱 (E-mail)" 
+                                        class="w-full bg-luxury-obsidian/80 border border-luxury-gold/20 focus:border-luxury-gold px-4 py-3 text-sm text-luxury-cream placeholder-luxury-sage/40 outline-none transition-all rounded-none"
+                                    />
+                                    <button 
+                                        type="submit"
+                                        class="w-full bg-luxury-gold text-luxury-obsidian py-4 text-xs tracking-[0.25em] uppercase font-bold transition hover:bg-luxury-cream"
+                                    >
+                                        尊貴訂閱解鎖通知
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* 高級溫潤紙質「線上打卡手冊」Modal */}
+                    {isDiaryOpen && (
+                        <div class="fixed inset-0 bg-luxury-obsidian/85 z-[9999] flex items-center justify-center p-4 md:p-6 backdrop-blur-md overflow-y-auto">
+                            <div class="bg-[#fdfcf9] text-[#2c2a29] border border-luxury-gold max-w-lg w-full rounded-none p-8 md:p-10 relative space-y-8 shadow-2xl transition-all max-h-[90vh] overflow-y-auto">
+                                <button 
+                                    onClick={() => setIsDiaryOpen(false)}
+                                    class="absolute top-6 right-6 text-luxury-clay hover:text-luxury-obsidian text-2xl transition"
+                                >
+                                    <i class="fa-solid fa-xmark"></i>
+                                </button>
+
+                                {/* 手帳頁首標記 */}
+                                <div class="border-b-2 border-luxury-gold/20 pb-4">
+                                    <span class="text-[10px] text-luxury-gold font-sans tracking-[0.3em] uppercase block mb-1">Aroma Calibration Diary</span>
+                                    <h3 class="text-handwritten text-4xl text-luxury-obsidian font-bold">21天能量打卡手冊</h3>
+                                    <p class="text-xs text-luxury-clay font-sans uppercase tracking-widest mt-1">Day {selectedDay} 冥想篇章</p>
+                                </div>
+
+                                <form onSubmit={saveDiaryAndCheckIn} class="space-y-6">
+                                    
+                                    {/* 1. 今日香氣處方 */}
+                                    <div class="space-y-2">
+                                        <div class="flex items-center gap-2">
+                                            <span class="text-xs font-bold uppercase tracking-wider text-luxury-obsidian">今日香氣處方</span>
+                                            <span class="text-[9px] bg-luxury-gold/15 text-luxury-clay px-2 py-0.5 rounded font-sans">Daily Prescription</span>
+                                        </div>
+                                        <div class="bg-luxury-cream border border-luxury-gold/15 p-4 space-y-1">
+                                            <p class="text-sm font-semibold text-luxury-obsidian flex items-center gap-2">
+                                                <i class="fa-solid fa-leaf text-luxury-gold text-xs"></i>
+                                                香氣配方：{dailyProgram[selectedDay].scent.split(" (")[0]}
+                                            </p>
+                                            <p class="text-xs text-luxury-clay">
+                                                關鍵能量：<span class="text-luxury-obsidian font-bold">{dailyProgram[selectedDay].theme}</span>
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    {/* 2. 正能量肯定句 */}
+                                    <div class="space-y-3">
+                                        <div class="flex items-center gap-2">
+                                            <span class="text-xs font-bold uppercase tracking-wider text-luxury-obsidian">正能量肯定句</span>
+                                            <span class="text-[9px] bg-luxury-gold/15 text-luxury-clay px-2 py-0.5 rounded font-sans">Affirmation</span>
+                                        </div>
+                                        <div class="bg-luxury-gold/5 border border-dashed border-luxury-gold/30 p-4 relative overflow-hidden">
+                                            <p class="text-handwritten text-2xl text-luxury-obsidian text-center italic my-2">
+                                                「{dailyProgram[selectedDay].affirmation}」
+                                            </p>
+                                            <p class="text-[10px] text-center text-luxury-clay leading-relaxed">
+                                                {dailyProgram[selectedDay].description}
+                                            </p>
+                                        </div>
+                                        
+                                        {/* 肯定句誦讀承諾勾選 */}
+                                        <label class="flex items-center gap-3 cursor-pointer p-2 hover:bg-luxury-cream transition">
+                                            <input 
+                                                type="checkbox" 
+                                                checked={affirmationChecked}
+                                                onChange={(e) => setAffirmationChecked(e.target.checked)}
+                                                class="accent-luxury-gold h-4 w-4 cursor-pointer"
+                                            />
+                                            <span class="text-xs text-luxury-obsidian font-medium">
+                                                我已將手敷於心輪，並複誦今日的肯定句。
+                                            </span>
+                                        </label>
+                                    </div>
+
+                                    {/* 3. 今日淨化冥想心得 */}
+                                    <div class="space-y-2">
+                                        <div class="flex items-center gap-2">
+                                            <span class="text-xs font-bold uppercase tracking-wider text-luxury-obsidian">今日淨化冥想心得 (15分鐘)</span>
+                                        </div>
+                                        <textarea 
+                                            required
+                                            value={tempMeditation}
+                                            onChange={(e) => setTempMeditation(e.target.value)}
+                                            placeholder="今天閉眼冥想時，妳身體與情緒最深刻的感受是什麼..." 
+                                            rows="3"
+                                            class="w-full bg-luxury-cream border border-luxury-gold/20 focus:border-luxury-gold px-4 py-3 text-sm text-luxury-obsidian placeholder-luxury-clay/40 outline-none transition-all resize-none rounded-none"
+                                        ></textarea>
+                                    </div>
+
+                                    {/* 4. 今天我願意釋放的是 */}
+                                    <div class="space-y-2">
+                                        <div class="flex items-center gap-2">
+                                            <span class="text-xs font-bold uppercase tracking-wider text-luxury-obsidian">今天我願意釋放的是...</span>
+                                        </div>
+                                        <textarea 
+                                            required
+                                            value={tempRelease}
+                                            onChange={(e) => setTempRelease(e.target.value)}
+                                            placeholder="溫柔地放下面前那些不再服務妳、重壓在肩上的內耗與重擔..." 
+                                            rows="3"
+                                            class="w-full bg-luxury-cream border border-luxury-gold/20 focus:border-luxury-gold px-4 py-3 text-sm text-[#2c2a29] placeholder-luxury-clay/40 outline-none transition-all resize-none rounded-none"
+                                        ></textarea>
+                                    </div>
+
+                                    <div class="pt-4 border-t border-luxury-gold/15 flex gap-4">
+                                        <button 
+                                            type="button"
+                                            onClick={() => setIsDiaryOpen(false)}
+                                            class="w-1/3 border border-luxury-clay text-luxury-clay hover:bg-luxury-cream py-4 text-xs tracking-[0.25em] uppercase font-bold transition"
+                                        >
+                                            取消返回
+                                        </button>
+                                        <button 
+                                            type="submit"
+                                            class="w-2/3 bg-luxury-obsidian text-luxury-gold hover:bg-luxury-gold hover:text-luxury-obsidian py-4 text-xs tracking-[0.25em] uppercase font-bold transition duration-300 shadow-xl"
+                                        >
+                                            儲存並點亮冥想蠟燭
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    )}
+
+                </div>
+            );
+        }
+
+        // Render React
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
